@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
-	"github.com/devfullcycle/20-CleanArch/internal/usecase"
-	"github.com/devfullcycle/20-CleanArch/pkg/events"
+	"github.com/maurotrindade/desafio-cleanarch/internal/entity"
+	"github.com/maurotrindade/desafio-cleanarch/internal/usecase"
+	"github.com/maurotrindade/desafio-cleanarch/pkg/events"
 )
 
 type WebOrderHandler struct {
@@ -42,6 +42,15 @@ func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err = json.NewEncoder(w).Encode(output)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h *WebOrderHandler) FindAll(w http.ResponseWriter, r *http.Request) {
+	var dto usecase.OrderInputDTO
+	err := json.NewEncoder(w).Encode(dto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

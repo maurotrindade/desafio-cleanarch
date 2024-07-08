@@ -6,13 +6,13 @@ package main
 import (
 	"database/sql"
 
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
-	"github.com/devfullcycle/20-CleanArch/internal/event"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/database"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/web"
-	"github.com/devfullcycle/20-CleanArch/internal/usecase"
-	"github.com/devfullcycle/20-CleanArch/pkg/events"
 	"github.com/google/wire"
+	"github.com/maurotrindade/desafio-cleanarch/internal/entity"
+	"github.com/maurotrindade/desafio-cleanarch/internal/event"
+	"github.com/maurotrindade/desafio-cleanarch/internal/infra/database"
+	"github.com/maurotrindade/desafio-cleanarch/internal/infra/web"
+	"github.com/maurotrindade/desafio-cleanarch/internal/usecase"
+	"github.com/maurotrindade/desafio-cleanarch/pkg/events"
 )
 
 var setOrderRepositoryDependency = wire.NewSet(
