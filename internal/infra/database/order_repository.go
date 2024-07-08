@@ -35,12 +35,24 @@ func (r *OrderRepository) GetTotal() (int, error) {
 	return total, nil
 }
 
-func (r *OrderRepository) ListAll() ([]entity.Order, error) {
-	stmt, err := r.Db.Prepare("select * from orders limit ?")
+func (r *OrderRepository) ListAll(page uint, limit uint, order string) ([]entity.Order, error) {
+	var query string
+	if order == "" || order == "asc" {
+		query = "select * from orders limit ? offset ?;"
+	} else {
+		query = "select * from orders order by id desc limit ? offset ?;"
+	}
+	stmt, err := r.Db.Prepare(query)
 	if err != nil {
 		return nil, err
 	}
-	rows, err := stmt.Query(10)
+
+	var offset uint = 0
+	if page > 1 {
+		offset = (page - 1) * limit
+	}
+
+	rows, err := stmt.Query(limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +67,5 @@ func (r *OrderRepository) ListAll() ([]entity.Order, error) {
 		orders = append(orders, order)
 	}
 
-	if err != nil {
-		return nil, err
-	}
 	return orders, nil
 }

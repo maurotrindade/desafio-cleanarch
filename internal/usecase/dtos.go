@@ -12,3 +12,9 @@ type OrderOutputDTO struct {
 	Tax        float64 `json:"tax"`
 	FinalPrice float64 `json:"final_price"`
 }
+
+type PaginationDTO struct {
+	Page  uint
+	Limit uint
+	Order string
+}

@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/maurotrindade/desafio-cleanarch/internal/entity"
 	"github.com/maurotrindade/desafio-cleanarch/internal/usecase"
@@ -49,9 +50,41 @@ func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *WebOrderHandler) FindAll(w http.ResponseWriter, r *http.Request) {
+	p := r.URL.Query().Get("page")
+	l := r.URL.Query().Get("limit")
+	o := r.URL.Query().Get("order")
+
+	var page uint = 0
+	if p != "" {
+		r, err := strconv.ParseUint(p, 10, 0)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		page = uint(r)
+	}
+
+	var limit uint = 10
+	if l != "" {
+		r, err := strconv.ParseUint(l, 10, 0)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		limit = uint(r)
+	}
+
+	if o != "" && o != "asc" && o != "desc" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	listOrder := usecase.NewListOrderUseCase(h.OrderRepository)
 
-	dto, err := listOrder.Execute()
+	paginationDto := usecase.PaginationDTO{Page: page, Limit: limit, Order: o}
+	dto, err := listOrder.Execute(paginationDto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -14,10 +14,10 @@ func NewListOrderUseCase(OrderRepository entity.OrderRepositoryInterface) *ListO
 	}
 }
 
-func (c *ListOrderUseCase) Execute() ([]OrderOutputDTO, error) {
+func (c *ListOrderUseCase) Execute(p PaginationDTO) ([]OrderOutputDTO, error) {
 	var dto []OrderOutputDTO
 
-	orders, err := c.OrderRepository.ListAll()
+	orders, err := c.OrderRepository.ListAll(p.Page, p.Limit, p.Order)
 	if err != nil {
 		return nil, err
 	}
