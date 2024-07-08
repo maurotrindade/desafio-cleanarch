@@ -8,13 +8,17 @@ package main
 
 import (
 	"database/sql"
+	"github.com/google/wire"
 	"github.com/maurotrindade/desafio-cleanarch/internal/entity"
 	"github.com/maurotrindade/desafio-cleanarch/internal/event"
 	"github.com/maurotrindade/desafio-cleanarch/internal/infra/database"
 	"github.com/maurotrindade/desafio-cleanarch/internal/infra/web"
 	"github.com/maurotrindade/desafio-cleanarch/internal/usecase"
 	"github.com/maurotrindade/desafio-cleanarch/pkg/events"
-	"github.com/google/wire"
+)
+
+import (
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // Injectors from wire.go:
@@ -26,7 +30,7 @@ func NewCreateOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInt
 	return createOrderUseCase
 }
 
-func NewFindAllOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.ListOrderUseCase {
+func NewListOrderUseCase(db *sql.DB) *usecase.ListOrderUseCase {
 	orderRepository := database.NewOrderRepository(db)
 	listOrderUseCase := usecase.NewListOrderUseCase(orderRepository)
 	return listOrderUseCase
