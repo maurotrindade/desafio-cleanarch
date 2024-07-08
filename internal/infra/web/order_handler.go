@@ -49,8 +49,15 @@ func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *WebOrderHandler) FindAll(w http.ResponseWriter, r *http.Request) {
-	var dto usecase.OrderInputDTO
-	err := json.NewEncoder(w).Encode(dto)
+	listOrder := usecase.NewListOrderUseCase(h.OrderRepository)
+
+	dto, err := listOrder.Execute()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(dto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

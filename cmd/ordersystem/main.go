@@ -8,6 +8,7 @@ import (
 
 	graphql_handler "github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/go-chi/chi/middleware"
 	"github.com/maurotrindade/desafio-cleanarch/configs"
 	"github.com/maurotrindade/desafio-cleanarch/internal/event/handler"
 	"github.com/maurotrindade/desafio-cleanarch/internal/infra/graph"
@@ -43,9 +44,11 @@ func main() {
 	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
+	// listOrderUseCase := NewListOrderUseCase(db)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
+	webserver.Router.Use(middleware.Logger)
 	webserver.Router.Post("/order", webOrderHandler.Create)
 	webserver.Router.Get("/order", webOrderHandler.FindAll)
 	fmt.Println("Starting web server on port", configs.WebServerPort)
