@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/maurotrindade/desafio-cleanarch/internal/infra/grpc/pb"
 	"github.com/maurotrindade/desafio-cleanarch/internal/usecase"
@@ -39,4 +40,33 @@ func (s *OrderService) CreateOrder(ctx context.Context, in *pb.CreateOrderReques
 		Tax:        float32(output.Tax),
 		FinalPrice: float32(output.FinalPrice),
 	}, nil
+}
+
+func (s *OrderService) ListOrder(ctx context.Context, in *pb.PaginationRequest) (*pb.ListOrderResponse, error) {
+	if in.Order != "" && in.Order != "asc" && in.Order != "desc" {
+		return nil, errors.New("invalid order option")
+	}
+
+	paginationDto := usecase.PaginationDTO{
+		Page:  uint(in.Page),
+		Limit: uint(in.Limit),
+		Order: in.Order,
+	}
+	dto, err := s.ListOrderUseCase.Execute(paginationDto)
+	if err != nil {
+		return nil, err
+	}
+
+	data := make([]*pb.OrderResponse, int(in.Limit))
+
+	for i, order := range dto {
+		data[i] = &pb.OrderResponse{
+			Id:         order.ID,
+			Price:      float32(order.Price),
+			Tax:        float32(order.Tax),
+			FinalPrice: float32(order.FinalPrice),
+		}
+	}
+
+	return &pb.ListOrderResponse{Orders: data}, nil
 }
