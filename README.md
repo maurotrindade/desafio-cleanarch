@@ -2,10 +2,9 @@
 
 ```sh
 docker compose up
-
-# run project
-sh run.sh
 ```
+
+Use `api/create_order.http` para criar novas orderns
 
 ## desafio:
 
