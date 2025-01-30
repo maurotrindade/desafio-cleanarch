@@ -1,5 +1,10 @@
 # desafio-cleanarch
 
+```sh
+# run project
+sh run.sh
+```
+
 ## desafio:
 
 Olá devs!
