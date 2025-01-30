@@ -47,6 +47,10 @@ func (s *OrderService) ListOrder(ctx context.Context, in *pb.PaginationRequest) 
 		return nil, errors.New("invalid order option")
 	}
 
+	if in.Limit == 0 {
+		in.Limit = 10
+	}
+
 	paginationDto := usecase.PaginationDTO{
 		Page:  uint(in.Page),
 		Limit: uint(in.Limit),
@@ -57,7 +61,7 @@ func (s *OrderService) ListOrder(ctx context.Context, in *pb.PaginationRequest) 
 		return nil, err
 	}
 
-	data := make([]*pb.OrderResponse, int(in.Limit))
+	data := make([]*pb.OrderResponse, int(in.Limit-1))
 
 	for i, order := range dto {
 		data[i] = &pb.OrderResponse{
