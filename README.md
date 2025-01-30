@@ -1,6 +1,8 @@
 # desafio-cleanarch
 
 ```sh
+docker compose up
+
 # run project
 sh run.sh
 ```
