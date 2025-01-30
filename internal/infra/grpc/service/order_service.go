@@ -61,7 +61,7 @@ func (s *OrderService) ListOrder(ctx context.Context, in *pb.PaginationRequest) 
 		return nil, err
 	}
 
-	data := make([]*pb.OrderResponse, int(in.Limit-1))
+	data := make([]*pb.OrderResponse, len(dto))
 
 	for i, order := range dto {
 		data[i] = &pb.OrderResponse{
